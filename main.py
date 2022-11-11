@@ -1,5 +1,6 @@
 from app import app
 
+
 def print_start():
     print('Run server on Flask')
 
