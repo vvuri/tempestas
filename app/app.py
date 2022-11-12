@@ -2,6 +2,7 @@ import logging
 import os.path
 
 from .config import LOG_DIR
+from .gismeteo import Gismeteo
 
 logger = logging.getLogger("app")
 logger.setLevel(logging.DEBUG)
@@ -17,5 +18,8 @@ logger.addHandler(handler)
 
 logger.info('message from main module')
 
+gismeteo = Gismeteo()
+
 def run():
     print("Run server")
+    gismeteo.get_current_weather()
