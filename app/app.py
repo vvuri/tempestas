@@ -1,5 +1,6 @@
 import logging
 import os.path
+import yaml
 
 from .config import LOG_DIR
 from .gismeteo import Gismeteo
@@ -19,6 +20,9 @@ logger.addHandler(handler)
 logger.info('message from main module')
 
 gismeteo = Gismeteo()
+
+def load_secrets():
+    pass
 
 def run():
     print("Run server")

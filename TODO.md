@@ -41,5 +41,8 @@ Create weather forecast aggregator.
 5. Telegram bot
    https://github.com/python-telegram-bot/python-telegram-bot
    ```pip install python-telegram-bot```
-6. ```pip freeze > requirements.txt```
-7. 
+6. Packages:
+    ```pip freeze > requirements.txt```
+8. Install pyYAML:
+   ```pip install pyyaml```
+9. 
