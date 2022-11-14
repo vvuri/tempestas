@@ -1,2 +1,2 @@
 LOG_DIR = '../Logs'
-SECRET_FILE = '../secret.yaml'
+SECRET_FILE = './secret.yaml'

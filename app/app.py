@@ -2,8 +2,9 @@ import logging
 import os.path
 import yaml
 
-from .config import LOG_DIR
+from .config import LOG_DIR, SECRET_FILE
 from .gismeteo import Gismeteo
+from .openweather import OpenWeather
 
 logger = logging.getLogger("app")
 logger.setLevel(logging.DEBUG)
@@ -17,13 +18,23 @@ formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(messag
 handler.setFormatter(formatter)
 logger.addHandler(handler)
 
-logger.info('message from main module')
+logger.debug('init logger')
 
-gismeteo = Gismeteo()
 
 def load_secrets():
-    pass
+    with open(SECRET_FILE) as f:
+        return yaml.full_load(f)
+
 
 def run():
-    print("Run server")
-    gismeteo.get_current_weather()
+    logger.debug("run: start")
+
+    secret = load_secrets()
+
+    # gismeteo = Gismeteo()
+    # gismeteo.get_current_weather()
+
+    openweather = OpenWeather(secret['openweather'], logger)
+    cur_temp = openweather.get_current_weather()
+
+    logger.info(cur_temp)
