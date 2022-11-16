@@ -1,5 +1,19 @@
 # https://openweathermap.org/
 # http://api.openweathermap.org/data/2.5/find?q=Petersburg&type=like&APPID=*****
+# Response:
+# {'message': 'like', 'cod': '200', 'count': 2,
+#   'list': [
+#       {'id': 480562, 'name': 'Tula',
+#       'coord': {'lat': 54.2044, 'lon': 37.6111},
+#       'main': {'temp': 271.35, 'feels_like': 266.9, 'temp_min': 271.35, 'temp_max': 271.35, 'pressure': 1012, 'humidity': 97, 'sea_level': 1012, 'grnd_level': 992},
+#       'dt': 1668553744,
+#       'wind': {'speed': 3.68, 'deg': 125},
+#       'sys': {'country': 'RU'},
+#       'rain': None,
+#       'snow': {'1h': 0.64},
+#       'clouds': {'all': 100},
+#       'weather': [{'id': 601, 'main': 'Snow', 'description': 'snow', 'icon': '13n'}]},
+#       {'id': 480508, 'name': 'Tul’skaya Oblast’', 'coord': {'lat': 54, 'lon': 37.5}, 'main': {'temp': 270.77, 'feels_like': 266.1, 'temp_min': 270.77, 'temp_max': 270.77, 'pressure': 1012, 'humidity': 97, 'sea_level': 1012, 'grnd_level': 981}, 'dt': 1668553512, 'wind': {'speed': 3.8, 'deg': 119}, 'sys': {'country': 'RU'}, 'rain': None, 'snow': {'1h': 0.69}, 'clouds': {'all': 100}, 'weather': [{'id': 601, 'main': 'Snow', 'description': 'snow', 'icon': '13n'}]}]}
 
 import json
 import requests
@@ -12,12 +26,38 @@ class OpenWeather:
         self.city = config['city']
         self.logger = logger
 
+    def _parse_direction(self, deg) -> str:
+        # ToDo: 125 -> ?
+        return "юз"
+
+    def _parse_snow(self, d) -> str:
+        # ToDo: {'1h': 0.64}
+        res = "0"
+        if d['1h']:
+            res = str(d['1h'])
+        return res
+
+    def _parse_rain(self, d) -> str:
+        # ToDo: None -> ?
+        res = "0"
+        return res
+
+    def _parse_clouds(self, d) -> str:
+        # ToDo: {'all': 100}
+        res = "Ясно"
+        if d['all'] > 80:
+            res = "Облачно"
+        elif d['all'] > 30:
+            res = "Переменная облачность"
+        return res
+
     def get_current_weather(self):
         current_temp = "null"
 
         payload = {
             'q': self.city,
             'type': 'like',
+            'units': 'metric',
             'APPID': self.token
         }
         try:
@@ -25,17 +65,31 @@ class OpenWeather:
 
             try:
                 response = json.loads(r.text)
+                {'message': 'like', 'cod': '200', 'count': 2, 'list': [{'id': 480562, 'name': 'Tula', 'coord': {'lat': 54.2044, 'lon': 37.6111}, 'main': {'temp': 271.35, 'feels_like': 266.9, 'temp_min': 271.35, 'temp_max': 271.35, 'pressure': 1012, 'humidity': 97, 'sea_level': 1012, 'grnd_level': 992}, 'dt': 1668553744, 'wind': {'speed': 3.68, 'deg': 125}, 'sys': {'country': 'RU'}, 'rain': None, 'snow': {'1h': 0.64}, 'clouds': {'all': 100}, 'weather': [{'id': 601, 'main': 'Snow', 'description': 'snow', 'icon': '13n'}]}, {'id': 480508, 'name': 'Tul’skaya Oblast’', 'coord': {'lat': 54, 'lon': 37.5}, 'main': {'temp': 270.77, 'feels_like': 266.1, 'temp_min': 270.77, 'temp_max': 270.77, 'pressure': 1012, 'humidity': 97, 'sea_level': 1012, 'grnd_level': 981}, 'dt': 1668553512, 'wind': {'speed': 3.8, 'deg': 119}, 'sys': {'country': 'RU'}, 'rain': None, 'snow': {'1h': 0.69}, 'clouds': {'all': 100}, 'weather': [{'id': 601, 'main': 'Snow', 'description': 'snow', 'icon': '13n'}]}]}
                 self.logger.debug(response)
 
                 status_code = response['cod']
-
                 if status_code == '200':
-                    # ToDo: 0 -> 'name': 'Tula'
-                    t = response['list'][0]['main']
-                    current_temp = str(round(float(t['temp']) - 273))
-                    wind = response['list'][0]['wind']['speed']
-                    # ToDo: rain
-                    # ToDo: snow
+                    # find Tula
+                    cities = ["{} ({})".format(d['name'], d['sys']['country']) for d in response['list']]
+                    position = cities.count('Tula (RU)')
+
+                    # temperatuer
+                    t = response['list'][position]['main']
+                    current_temp = str(round(float(t['temp'])))
+
+                    # wind speed {'speed': 3.68, 'deg': 125}
+                    wind = response['list'][position]['wind']['speed']
+                    wind_direction = self._parse_direction(response['list'][position]['wind']['deg'])
+
+                    # rain
+                    rain = response['list'][position]['rain']
+
+                    # snow
+                    snow = self._parse_snow(response['list'][position]['snow'])
+
+                    # clouds
+                    clouds = self._parse_clouds(response['list'][position]['clouds'])
             except:
                 self.logger.warn("No parse response from openweathermap.org")
                 self.logger.warn("response: " + response)
@@ -44,4 +98,5 @@ class OpenWeather:
             self.logger.warn("response: " + r)
             self.logger.debug("request url: " + self.URL)
 
-        return {'temp': current_temp, 'wind': wind}
+        return {'temp': current_temp, 'wind': wind, "wind_direction": wind_direction,
+                "rain": rain, "snow": snow, "clouds": clouds}
