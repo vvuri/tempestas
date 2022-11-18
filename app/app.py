@@ -5,6 +5,7 @@ import yaml
 from .config import LOG_DIR, SECRET_FILE
 from .gismeteo import Gismeteo
 from .openweather import OpenWeather
+from .telegram import TelegramBot
 
 logger = logging.getLogger("app")
 logger.setLevel(logging.DEBUG)
@@ -34,7 +35,10 @@ def run():
     # gismeteo = Gismeteo()
     # gismeteo.get_current_weather()
 
-    openweather = OpenWeather(secret['openweather'], logger)
-    cur_temp = openweather.get_current_weather()
+    # openweather = OpenWeather(secret['openweather'], logger)
+    # cur_temp = openweather.get_current_weather()
+    #
+    # logger.info(cur_temp)
 
-    logger.info(cur_temp)
+    bot = TelegramBot(secret['telegram'], logger)
+    bot.run()
