@@ -28,4 +28,3 @@ class TelegramBot():
     def help(self, update: Update, context: CallbackContext):
         update.message.reply_text("Your Message")
         self.logger.debug("help")
-

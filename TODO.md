@@ -43,6 +43,7 @@ Create weather forecast aggregator.
    ```pip install python-telegram-bot```
 6. Packages:
     ```pip freeze > requirements.txt```
-8. Install pyYAML:
+7. Install pyYAML:
    ```pip install pyyaml```
+8. Add setup.cfg for flake8
 9. 

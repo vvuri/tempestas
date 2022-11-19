@@ -3,8 +3,8 @@ import os.path
 import yaml
 
 from .config import LOG_DIR, SECRET_FILE
-from .gismeteo import Gismeteo
-from .openweather import OpenWeather
+# from .gismeteo import Gismeteo
+# from .openweather import OpenWeather
 from .telegram import TelegramBot
 
 logger = logging.getLogger("app")
