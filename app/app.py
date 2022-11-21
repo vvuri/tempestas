@@ -41,4 +41,5 @@ def run():
     # logger.info(cur_temp)
 
     bot = TelegramBot(secret['telegram'], logger)
-    bot.run()
+    bot.getMe()
+    bot.getUpdates()
