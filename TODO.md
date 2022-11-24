@@ -23,6 +23,19 @@ Create weather forecast aggregator.
   - yaml config  
   - default file
   - logger
+- admin panel
+  - flask
+  - jwt auth
+- db for data
+  - migration
+  - SQL Alchemy
+- bots 
+  - vk bot
+    - vkware or vkbottle
+  - telegram 
+    - aiogram 
+    - pyTelegramBotAPI
+  - discord.py 
 
 ### Steps
 1. Create project in PyCharm
