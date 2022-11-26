@@ -28,7 +28,8 @@ Create weather forecast aggregator.
   - jwt auth
 - db for data
   - migration
-  - SQL Alchemy
+  - SQL Alchemy + Gino
+    - https://habr.com/ru/company/kts/blog/579214/
 - bots 
   - vk bot
     - vkware or vkbottle
@@ -36,6 +37,12 @@ Create weather forecast aggregator.
     - aiogram 
     - pyTelegramBotAPI
   - discord.py 
+- aiohttp
+  - создание ассинхронного веб сервар 
+    - https://habr.com/ru/company/kts/blog/560058/
+  - Dependency Injector
+    - https://habr.com/ru/post/513510/ 
+    - https://github.com/ets-labs/python-dependency-injector 
 
 ### Steps
 1. Create project in PyCharm

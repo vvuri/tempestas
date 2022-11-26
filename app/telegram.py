@@ -2,10 +2,16 @@
 # from telegram.update import Update
 # from telegram.ext.callbackcontext import CallbackContext
 # from telegram.ext.commandhandler import CommandHandler
+import asyncio
+import time
+
 import requests
 
-from aiogram import Bot, Dispatcher, executor, types
+from aiogram import Bot, Dispatcher, types
+from aiogram.types import InlineKeyboardButton
 import json
+
+BTN_WEATHER = InlineKeyboardButton('Weather', callback_data='weather')
 
 
 class TelegramBot():
@@ -14,8 +20,22 @@ class TelegramBot():
         self.bot_name = config['name']
         self.bot_user = config['user']
         self.logger = logger
-        self.URL = "https://api.telegram.org/bot"+self.token
+        self.URL = "https://api.telegram.org/bot" + self.token
         self.bot = Bot(token=self.token)
+        self.loop = asyncio.get_event_loop()
+        self.loop.run_until_complete(self.__async__init())
+
+    async def __async__init(self):
+        try:
+            self.disp = Dispatcher(self.bot)
+            self.disp.register_message_handler(self.start_handler, commands={"start", "restart"})
+            await self.disp.start_polling()
+        except:
+            self.logger.warn("Telegram not init dispatcher")
+
+    def __del__(self):
+        self.bot.close()
+        time.sleep(3)
 
     # def run(self):
     #     self.updater = Updater(self.token, use_context=True)
@@ -36,7 +56,7 @@ class TelegramBot():
     #     self.logger.debug("help")
 
     def _getRequest(self, path):
-        r = requests.get(self.URL+path)
+        r = requests.get(self.URL + path)
         self.logger.debug(r.status_code)
         try:
             response = json.loads(r.text)
@@ -57,3 +77,9 @@ class TelegramBot():
             print(f"🤖 Hello, I'm {me.first_name}.\nHave a nice Day!")
         except:
             self.logger.warn("telegram bot say_hello error")
+
+    async def start_handler(self, event: types.Message):
+        await event.answer(
+            f"Hello, {event.from_user.get_mention(as_html=True)} 👋!",
+            parse_mode=types.ParseMode.HTML
+        )

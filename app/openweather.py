@@ -93,8 +93,8 @@ class OpenWeather:
         if degrees == 360:
             degrees = 0
         for item in WindDirection:
-                if item.deg == degrees:
-                    return item.ru
+            if item.deg == degrees:
+                return item.ru
         return ''
 
     def get_current_weather(self):
