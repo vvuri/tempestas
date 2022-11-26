@@ -18,6 +18,47 @@
 import json
 import requests
 
+from enum import Enum
+
+
+class WindDirection(Enum):
+    North = {
+        'deg': 0,
+        'ru': 'с'
+    }
+    Northeast = {
+        'deg': 45,
+        'ru': 'с-в'
+    }
+    East = {
+        'deg': 90,
+        'ru': 'в'
+    }
+    Southeast = {
+        'deg': 135,
+        'ru': 'ю-в'
+    }
+    South = {
+        'deg': 180,
+        'ru': 'ю'
+    }
+    Southwest = {
+        'deg': 225,
+        'ru': 'ю-з'
+    }
+    West = {
+        'deg': 270,
+        'ru': 'з'
+    }
+    Northwest = {
+        'deg': 315,
+        'ru': 'с-з'
+    }
+
+    def __init__(self, vals):
+        self.deg = vals['deg']
+        self.ru = vals['ru']
+
 
 class OpenWeather:
     def __init__(self, config, logger):
@@ -25,10 +66,6 @@ class OpenWeather:
         self.token = config['token']
         self.city = config['city']
         self.logger = logger
-
-    def _parse_direction(self, deg) -> str:
-        # ToDo: 125 -> ?
-        return "юз"
 
     def _parse_snow(self, d) -> str:
         # ToDo: {'1h': 0.64}
@@ -50,6 +87,15 @@ class OpenWeather:
         elif d['all'] > 30:
             res = "Переменная облачность"
         return res
+
+    def _parse_direction(self, degrees) -> str:
+        degrees = round(degrees / 45) * 45
+        if degrees == 360:
+            degrees = 0
+        for item in WindDirection:
+                if item.deg == degrees:
+                    return item.ru
+        return ''
 
     def get_current_weather(self):
         current_temp = "null"
