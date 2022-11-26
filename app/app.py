@@ -2,6 +2,7 @@ import logging
 import os.path
 import yaml
 
+import asyncio
 from .config import LOG_DIR, SECRET_FILE
 # from .gismeteo import Gismeteo
 # from .openweather import OpenWeather
@@ -41,5 +42,6 @@ def run():
     # logger.info(cur_temp)
 
     bot = TelegramBot(secret['telegram'], logger)
-    bot.getMe()
-    bot.getUpdates()
+    # bot.getMe()
+    # bot.getUpdates()
+    asyncio.run(bot.say_hello())

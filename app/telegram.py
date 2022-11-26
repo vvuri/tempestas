@@ -4,6 +4,7 @@
 # from telegram.ext.commandhandler import CommandHandler
 import requests
 
+from aiogram import Bot, Dispatcher, executor, types
 import json
 
 
@@ -14,6 +15,7 @@ class TelegramBot():
         self.bot_user = config['user']
         self.logger = logger
         self.URL = "https://api.telegram.org/bot"+self.token
+        self.bot = Bot(token=self.token)
 
     # def run(self):
     #     self.updater = Updater(self.token, use_context=True)
@@ -48,3 +50,10 @@ class TelegramBot():
 
     def getUpdates(self) -> dict:
         return self._getRequest("/getUpdates")
+
+    async def say_hello(self):
+        try:
+            me = await self.bot.get_me()
+            print(f"🤖 Hello, I'm {me.first_name}.\nHave a nice Day!")
+        except:
+            self.logger.warn("telegram bot say_hello error")

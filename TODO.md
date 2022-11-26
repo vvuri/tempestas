@@ -59,4 +59,6 @@ Create weather forecast aggregator.
 7. Install pyYAML:
    ```pip install pyyaml```
 8. Add setup.cfg for flake8
-9. 
+9. Add async telegram library:
+```pip install aiogram```
+10. 
