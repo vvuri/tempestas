@@ -68,4 +68,7 @@ Create weather forecast aggregator.
 8. Add setup.cfg for flake8
 9. Add async telegram library:
 ```pip install aiogram```
-10. 
+10. Telegram 
+    - documentation https://core.telegram.org/bots/api
+    - aiogram book https://mastergroosha.github.io/aiogram-2-guide
+11. 

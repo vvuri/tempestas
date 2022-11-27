@@ -41,10 +41,6 @@ async def cmd_test2(message: types.Message):
 async def cmd_dice(message: types.Message):
     await message.answer_dice(emoji="🎲")
 
-@dp.message_handler(commands=['start', 'weather', 'now'])
-async def show_weather(message: types.Message):
-    await message.answer(text="start-weather", reply_markup=inline_keyboard.)
-
 # обработка исключений - вместо try
 @dp.message_handler(commands="block")
 async def cmd_block(message: types.Message):
