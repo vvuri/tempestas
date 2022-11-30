@@ -7,8 +7,8 @@ from aiogram import Bot, Dispatcher, executor, types
 SECRET_FILE = '../secret.yaml'
 token = None
 with open(SECRET_FILE) as f:
-     secret = yaml.full_load(f)
-     token = secret['telegram']['token']
+    secret = yaml.full_load(f)
+    token = secret['telegram']['token']
 
 # Объект бота
 bot = Bot(token=token)
@@ -33,13 +33,16 @@ async def cmd_test1(message: types.Message):
 # # Где-то в другом месте...
 # dp.register_message_handler(cmd_test2, commands="test2")
 
+
 @dp.message_handler(commands="test2")
 async def cmd_test2(message: types.Message):
     await message.answer("Test 2")
 
+
 @dp.message_handler(commands="dice")
 async def cmd_dice(message: types.Message):
     await message.answer_dice(emoji="🎲")
+
 
 # обработка исключений - вместо try
 @dp.message_handler(commands="block")
