@@ -4,6 +4,7 @@
 # from telegram.ext.commandhandler import CommandHandler
 import asyncio
 import time
+from typing import Any
 
 import requests
 
@@ -83,3 +84,6 @@ class TelegramBot():
             f"Hello, {event.from_user.get_mention(as_html=True)} 👋!",
             parse_mode=types.ParseMode.HTML
         )
+
+    async def handle(self) -> Any:
+        await self.event.answer("Hello!")
