@@ -3,7 +3,7 @@ import sqlite3
 
 DB_PATH = "./"
 
-connection = sqlite3.connect(database=os.path.join(DB_PATH,"experiment.db"))
+connection = sqlite3.connect(database=os.path.join(DB_PATH, "experiment.db"))
 
 # Create DB
 with open(os.path.join(DB_PATH, "0000-createdb.sql")) as sql_script:
@@ -34,5 +34,3 @@ connection.close()
 # 1) sqlite-tools-win32-x86 - https://www.sqlite.org/download.html
 # 2) SQLite Studio - https://sqlitestudio.pl/
 # 3) DB Browser for SQLite (DB4S) - https://sqlitebrowser.org/
-
-

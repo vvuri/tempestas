@@ -2,6 +2,9 @@ import yaml
 
 from aiogram import Bot, Dispatcher, types
 from aiogram.utils import executor
+from aiogram.types import Message
+from aiogram.dispatcher.middlewares import BaseMiddleware
+
 
 async def cmd_hi(message: types.Message):
     await message.reply("Отличный выбор!")
@@ -13,7 +16,6 @@ with open(SECRET_FILE) as f:
     secret = yaml.full_load(f)
     token = secret['telegram']['token']
 
-from aiogram.types import Message
 
 # async def handler(message: Message, text: str):
 #     await message.answer(text)
@@ -21,18 +23,17 @@ from aiogram.types import Message
 def generate_text():
     return "generated text"
 
+
 async def handler(message: Message):
     text = generate_text()
     await message.answer(text)
 
 
-from aiogram.dispatcher.middlewares import BaseMiddleware
-# from aiogram.types import Message
-
 class YourMiddleware(BaseMiddleware):
     async def on_pre_process_message(self, message: Message, data: dict):
         # `text` is a name of var passed to handler
         data["text"] = generate_text()
+
 
 bot = Bot(token=token, parse_mode=types.ParseMode.HTML)
 dp = Dispatcher(bot)

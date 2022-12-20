@@ -4,7 +4,7 @@ from aiogram import Bot, Dispatcher, executor, types
 SECRET_FILE = '../secret.yaml'
 
 
-def run_tegram_bot():
+def run_telegram_bot():
     # token = None
     with open(SECRET_FILE) as f:
         secret = yaml.full_load(f)
@@ -24,4 +24,5 @@ def run_tegram_bot():
 
     executor.start_polling(dp, skip_updates=True)
 
-run_tegram_bot()
+
+run_telegram_bot()

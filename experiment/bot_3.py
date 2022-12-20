@@ -10,4 +10,3 @@ with open(SECRET_FILE) as f:
 
 bot = Bot(token=token, parse_mode=types.ParseMode.HTML)
 dp = Dispatcher(bot)
-

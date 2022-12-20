@@ -71,4 +71,6 @@ Create weather forecast aggregator.
 10. Telegram 
     - documentation https://core.telegram.org/bots/api
     - aiogram book https://mastergroosha.github.io/aiogram-2-guide
-11. 
+11. for jash passwords:
+```pip install passlib```
+12. 
