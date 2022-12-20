@@ -29,3 +29,10 @@ print(result)
 cursor.close()
 
 connection.close()
+
+# IDE
+# 1) sqlite-tools-win32-x86 - https://www.sqlite.org/download.html
+# 2) SQLite Studio - https://sqlitestudio.pl/
+# 3) DB Browser for SQLite (DB4S) - https://sqlitebrowser.org/
+
+
