@@ -74,4 +74,8 @@ Create weather forecast aggregator.
 11. for hash/verify passwords + generate:
     -```pip install passlib```
     - doc: https://passlib.readthedocs.io/en/stable/ 
-12. 
+12. JWT
+    - ```pip install pyjwt```
+    - doc: https://pyjwt.readthedocs.io/en/latest/
+13. Telegram create group 'TulaWeather'
+14. 
