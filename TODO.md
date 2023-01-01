@@ -78,4 +78,5 @@ Create weather forecast aggregator.
     - ```pip install pyjwt```
     - doc: https://pyjwt.readthedocs.io/en/latest/
 13. Telegram create group 'TulaWeather'
-14. 
+14. Add TulaWeatherBot to group 'TulaWeather' and add right as Administrator.
+15. 
