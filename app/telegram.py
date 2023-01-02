@@ -1,89 +1,29 @@
-# from telegram.ext.updater import Updater
-# from telegram.update import Update
-# from telegram.ext.callbackcontext import CallbackContext
-# from telegram.ext.commandhandler import CommandHandler
-import asyncio
-import time
-from typing import Any
+from aiogram import Bot, Dispatcher, executor, types
 
-import requests
+from app.app import secret, logger, get_current_weather
 
-from aiogram import Bot, Dispatcher, types
-from aiogram.types import InlineKeyboardButton
-import json
+token = secret['telegram']['token']
 
-BTN_WEATHER = InlineKeyboardButton('Weather', callback_data='weather')
+bot = Bot(token=token, parse_mode=types.ParseMode.HTML)
+logger.debug("Init TelegramBot")
+
+dp = Dispatcher(bot)
 
 
-class TelegramBot():
-    def __init__(self, config, logger):
-        self.token = config['token']
-        self.bot_name = config['name']
-        self.bot_user = config['user']
-        self.logger = logger
-        self.URL = "https://api.telegram.org/bot" + self.token
-        self.bot = Bot(token=self.token)
-        self.loop = asyncio.get_event_loop()
-        self.loop.run_until_complete(self.__async__init())
+@dp.message_handler(commands="hi")
+async def cmd_hi(message: types.Message):
+    await message.answer("Прогноз подгоды в *Туле*", parse_mode="MarkdownV2")
+    await message.answer("Для получения текущей погоды введите, */now*!", parse_mode="MarkdownV2")
 
-    async def __async__init(self):
-        try:
-            self.disp = Dispatcher(self.bot)
-            self.disp.register_message_handler(self.start_handler, commands={"start", "restart"})
-            await self.disp.start_polling()
-        except:
-            self.logger.warn("Telegram not init dispatcher")
 
-    def __del__(self):
-        self.bot.close()
-        time.sleep(3)
+@dp.message_handler(commands="now")
+async def cmd_now(message: types.Message):
+    t = get_current_weather()
+    await message.answer("Погода в Туле:", parse_mode=types.ParseMode.HTML)
+    await message.answer("Температура " + str(t['temp']), parse_mode=types.ParseMode.HTML)
 
-    # def run(self):
-    #     self.updater = Updater(self.token, use_context=True)
-    #
-    #     self.updater.dispatcher.add_handler(CommandHandler('start', self.start))
-    #     self.updater.dispatcher.add_handler(CommandHandler('help', self.help))
-    #
-    #     self.updater.start_polling()
-    #     self.logger.debug("run bot")
-    #
-    # def start(self, update: Update, context: CallbackContext):
-    #     update.message.reply_text(
-    #         "Enter the text you want to show to the user whenever they start the bot")
-    #     self.logger.debug("start")
-    #
-    # def help(self, update: Update, context: CallbackContext):
-    #     update.message.reply_text("Your Message")
-    #     self.logger.debug("help")
 
-    def _getRequest(self, path):
-        r = requests.get(self.URL + path)
-        self.logger.debug(r.status_code)
-        try:
-            response = json.loads(r.text)
-            self.logger.debug(response)
-        except:
-            self.logger.warn("Telegram getMe response")
-        return response
-
-    def getMe(self) -> dict:
-        return self._getRequest("/getMe")
-
-    def getUpdates(self) -> dict:
-        return self._getRequest("/getUpdates")
-
-    async def say_hello(self):
-        try:
-            me = await self.bot.get_me()
-            print(f"🤖 Hello, I'm {me.first_name}.\nHave a nice Day!")
-        except:
-            self.logger.warn("telegram bot say_hello error")
-
-    async def start_handler(self, event: types.Message):
-        await event.answer(
-            f"Hello, {event.from_user.get_mention(as_html=True)} 👋!",
-            parse_mode=types.ParseMode.HTML
-        )
-
-    async def handle(self) -> Any:
-        await self.event.answer("Hello!")
+def start_telegram_bot():
+    logger.info("Run Telegram bot")
+    # skip_updates - при перезапуске не обрабатывать старые сообщения
+    executor.start_polling(dp, skip_updates=True)

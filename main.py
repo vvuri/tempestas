@@ -1,7 +1,8 @@
 import time
 
 from app import app
+from app.telegram import start_telegram_bot
 
 if __name__ == '__main__':
-    app.run()
-    time.sleep(200)
+    app.init()
+    start_telegram_bot()

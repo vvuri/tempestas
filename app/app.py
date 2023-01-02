@@ -1,12 +1,10 @@
 import logging
 import os.path
-import yaml
 
-import asyncio
-from .config import LOG_DIR, SECRET_FILE
+from .config import LOG_DIR
 # from .gismeteo import Gismeteo
-# from .openweather import OpenWeather
-from .telegram import TelegramBot
+from .openweather import OpenWeather
+from .helper import load_secrets
 
 logger = logging.getLogger("app")
 logger.setLevel(logging.DEBUG)
@@ -19,29 +17,27 @@ handler.setLevel(logging.DEBUG)
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 handler.setFormatter(formatter)
 logger.addHandler(handler)
-
 logger.debug('init logger')
 
-
-def load_secrets():
-    with open(SECRET_FILE) as f:
-        return yaml.full_load(f)
+secret = load_secrets()
+openweather = None
 
 
-def run():
+def init():
     logger.debug("run: start")
-
-    secret = load_secrets()
 
     # gismeteo = Gismeteo()
     # gismeteo.get_current_weather()
 
-    # openweather = OpenWeather(secret['openweather'], logger)
-    # cur_temp = openweather.get_current_weather()
-    #
+    openweather = OpenWeather(secret['openweather'], logger)
+
     # logger.info(cur_temp)
 
-    bot = TelegramBot(secret['telegram'], logger)
-    # bot.getMe()
-    # bot.getUpdates()
-    asyncio.run(bot.say_hello())
+    logger.info("Telegram bot started")
+
+
+def get_current_weather():
+    # ToDo: work with memory catch
+    cur_temp = openweather.get_current_weather()
+    logger.debug(cur_temp)
+    return cur_temp
